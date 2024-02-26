@@ -4,4 +4,4 @@ Continuing from the refresher [here](https://github.com/daretodave/react-refresh
 
 > TTT stands for **T**ic **T**ac **T**oe. This is a tic-tac-toe game built with React!
 
-This project is automatically deployed [here](#), take a peak.
+This project is automatically deployed [here](https://react-ttt-mu.vercel.app/), take a peak.
