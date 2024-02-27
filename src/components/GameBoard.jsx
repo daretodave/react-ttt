@@ -6,7 +6,7 @@ const initialGameBoard = [
     [null, null, null]
 ];
 
-export default function GameBoard() {
+export default function GameBoard({onSelectTile, activePlayerSymbol}) {
     const [
         gameBoard,
         setGameBoard,
@@ -16,10 +16,12 @@ export default function GameBoard() {
         setGameBoard(priorGameBoard => {
             const board = [...priorGameBoard.map(row => [...row])]
 
-            board[rowIndex][columnIndex] = 'Y';
+            board[rowIndex][columnIndex] = activePlayerSymbol;
 
             return board;
         });
+
+        onSelectTile();
     }
 
     return (
