@@ -16,7 +16,7 @@ export default function PlayerInfo({name, symbol, isActive}) {
         ? <input type="text" required value={currentName} onChange={handleChange} />
         : <span className="player-name">{currentName}</span>;
 
-    return (<li className={isActive && "active"}>
+    return (<li className={isActive ? "active" : undefined}>
         <span className="player">
             {playerName}
             <span className="player-symbol">{symbol}</span>

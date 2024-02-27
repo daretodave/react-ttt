@@ -6,23 +6,33 @@ const initialGameBoard = [
     [null, null, null]
 ];
 
-export default function GameBoard({onSelectTile, activePlayerSymbol}) {
-    const [
-        gameBoard,
-        setGameBoard,
-    ] = useState(initialGameBoard);
+export default function GameBoard({onSelectTile, turns}) {
+    let gameBoard = [...initialGameBoard.map(row => [...row])];
 
-    function handleSelectTile(rowIndex, columnIndex) {
-        setGameBoard(priorGameBoard => {
-            const board = [...priorGameBoard.map(row => [...row])]
+    for (const {tile, player} of turns) {
+        const {
+            row,
+            col
+        } = tile;
 
-            board[rowIndex][columnIndex] = activePlayerSymbol;
-
-            return board;
-        });
-
-        onSelectTile();
+        gameBoard[row][col] = player;
     }
+    // const [
+    //     gameBoard,
+    //     setGameBoard,
+    // ] = useState(initialGameBoard);
+    //
+    // function handleSelectTile(rowIndex, columnIndex) {
+    //     setGameBoard(priorGameBoard => {
+    //         const board = [...priorGameBoard.map(row => [...row])]
+    //
+    //         board[rowIndex][columnIndex] = activePlayerSymbol;
+    //
+    //         return board;
+    //     });
+    //
+    //     onSelectTile();
+    // }
 
     return (
         <ol id="game-board">
@@ -31,7 +41,7 @@ export default function GameBoard({onSelectTile, activePlayerSymbol}) {
                     <ol>{
                         row.map((symbol, columnIndex) =>
                             <li key={columnIndex}>
-                                <button onClick={() => handleSelectTile(rowIndex, columnIndex)}>{symbol}</button>
+                                <button onClick={() => onSelectTile(rowIndex, columnIndex)}>{symbol}</button>
                             </li>
                         )
                     }</ol>
