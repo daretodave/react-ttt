@@ -36,8 +36,8 @@ function App() {
                     <PlayerInfo isActive={activePlayer === 'O'} name="Player 2" symbol="O"/>
                 </ol>
                 <GameBoard turns={gameTurns} onSelectTile={handleSelectTile} />
-                <Log />
             </div>
+            <Log turns={gameTurns} />
         </main>
 
     )

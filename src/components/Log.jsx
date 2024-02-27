@@ -1,5 +1,3 @@
-export default function Log() {
-    return <ol id="log">
-        <li>XX</li>
-    </ol>
+export default function Log({turns}) {
+    return <ol id="log">{turns.map((entry) => <li key={`${entry.tile.row}${entry.tile.col}`}>{entry.player} selected {entry.tile.row},{entry.tile.col}</li>)}</ol>
 }
