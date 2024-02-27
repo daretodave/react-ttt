@@ -3,6 +3,7 @@ import GameBoard from "./components/GameBoard.jsx";
 import {useState} from "react";
 import Log from "./components/Log.jsx";
 import {WINNING_COMBINATIONS} from "./winning-combinations.js";
+import GameOver from "./components/GameOver.jsx";
 const initialGameBoard = [
     [null, null, null],
     [null, null, null],
@@ -46,6 +47,8 @@ function App() {
         }
     }
 
+    const isGameDraw = gameTurns.length === 9 && winner === null;
+
     function handleSelectTile(rowIndex, columnIndex) {
         setGameTurns(prevTurns => [{
             tile: {
@@ -56,13 +59,17 @@ function App() {
         }, ...prevTurns]);
     }
 
+    function handleSelectRematch() {
+        setGameTurns([]);
+    }
+
     return (<main>
             <div id="game-container">
                 <ol id="players" className="highlight-player">
                     <PlayerInfo isActive={activePlayer === 'X'} name="Player 1" symbol="X"/>
                     <PlayerInfo isActive={activePlayer === 'O'} name="Player 2" symbol="O"/>
                 </ol>
-                {winner && <p>You won, {winner}!</p>}
+                {(winner || isGameDraw) && <GameOver onClickRematch={handleSelectRematch} name={winner}/>}
                 <GameBoard gameBoard={gameBoard} turns={gameTurns} onSelectTile={handleSelectTile}/>
             </div>
             <Log turns={gameTurns}/>
