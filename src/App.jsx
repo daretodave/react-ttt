@@ -19,6 +19,10 @@ function getActivePlayer(turns) {
 }
 
 function App() {
+    const [players, setPlayers] = useState({
+        X: 'Player 1',
+        Y: 'Player 2'
+    })
     const [gameTurns, setGameTurns] = useState([]);
     const activePlayer = getActivePlayer(gameTurns);
 
@@ -43,7 +47,7 @@ function App() {
         if (firstTile
             && firstTile === secondTile
             && firstTile === thirdTile) {
-            winner = firstTile;
+            winner = players[firstTile];
         }
     }
 
@@ -63,11 +67,20 @@ function App() {
         setGameTurns([]);
     }
 
+    function handlePlayerNameChange(symbol, playerName) {
+        setPlayers(players => {
+            return {
+                ...players,
+                [symbol]: playerName
+            };
+        })
+    }
+
     return (<main>
             <div id="game-container">
                 <ol id="players" className="highlight-player">
-                    <PlayerInfo isActive={activePlayer === 'X'} name="Player 1" symbol="X"/>
-                    <PlayerInfo isActive={activePlayer === 'O'} name="Player 2" symbol="O"/>
+                    <PlayerInfo onNameChanged={handlePlayerNameChange} isActive={activePlayer === 'X'} name="Player 1" symbol="X"/>
+                    <PlayerInfo onNameChanged={handlePlayerNameChange} isActive={activePlayer === 'O'} name="Player 2" symbol="O"/>
                 </ol>
                 {(winner || isGameDraw) && <GameOver onClickRematch={handleSelectRematch} name={winner}/>}
                 <GameBoard gameBoard={gameBoard} turns={gameTurns} onSelectTile={handleSelectTile}/>
