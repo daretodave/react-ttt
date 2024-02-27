@@ -3,30 +3,27 @@ import GameBoard from "./components/GameBoard.jsx";
 import {useState} from "react";
 import Log from "./components/Log.jsx";
 
+function getActivePlayer(turns) {
+    let activePlayer = 'X';
+    if (turns.length && turns[0].player === 'X') {
+        activePlayer = 'O'
+    }
+
+    return activePlayer;
+}
 
 function App() {
-    const [activePlayer, setActivePlayer] = useState('X');
     const [gameTurns, setGameTurns] = useState([]);
+    const activePlayer = getActivePlayer(gameTurns);
 
     function handleSelectTile(rowIndex, columnIndex) {
-        setActivePlayer(
-            currentActivePlayer => currentActivePlayer === 'X' ? 'O' : 'X'
-        );
-
-        setGameTurns(prevTurns => {
-            let currentPlayer = 'X';
-            if (prevTurns.length && prevTurns[0].player === 'X') {
-                currentPlayer = 'O'
-            }
-
-            return [{
-                tile: {
-                    row: rowIndex,
-                    col: columnIndex
-                },
-                player: currentPlayer
-            }, ...prevTurns];
-        })
+        setGameTurns(prevTurns => [{
+            tile: {
+                row: rowIndex,
+                col: columnIndex
+            },
+            player: getActivePlayer(prevTurns)
+        }, ...prevTurns]);
     }
 
     return (<main>
@@ -35,9 +32,9 @@ function App() {
                     <PlayerInfo isActive={activePlayer === 'X'} name="Player 1" symbol="X"/>
                     <PlayerInfo isActive={activePlayer === 'O'} name="Player 2" symbol="O"/>
                 </ol>
-                <GameBoard turns={gameTurns} onSelectTile={handleSelectTile} />
+                <GameBoard turns={gameTurns} onSelectTile={handleSelectTile}/>
             </div>
-            <Log turns={gameTurns} />
+            <Log turns={gameTurns}/>
         </main>
 
     )
