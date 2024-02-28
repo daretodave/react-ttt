@@ -4,11 +4,17 @@ import {useState} from "react";
 import Log from "./components/Log.jsx";
 import {WINNING_COMBINATIONS} from "./winning-combinations.js";
 import GameOver from "./components/GameOver.jsx";
-const initialGameBoard = [
+
+const INIT_GAME_BOARD = [
     [null, null, null],
     [null, null, null],
     [null, null, null]
 ];
+
+const INIT_PLAYERS = {
+    X: 'Player 1',
+    O: 'Player 2'
+};
 function getActivePlayer(turns) {
     let activePlayer = 'X';
     if (turns.length && turns[0].player === 'X') {
@@ -18,27 +24,7 @@ function getActivePlayer(turns) {
     return activePlayer;
 }
 
-function App() {
-    const [players, setPlayers] = useState({
-        X: 'Player 1',
-        Y: 'Player 2'
-    })
-    const [gameTurns, setGameTurns] = useState([]);
-    const activePlayer = getActivePlayer(gameTurns);
-
-    const gameBoard = [...initialGameBoard.map(row => [...row])];
-
-    for (const {tile, player} of gameTurns) {
-        const {
-            row,
-            col
-        } = tile;
-
-        gameBoard[row][col] = player;
-    }
-
-    let winner = null;
-
+function getWinnerFromBoard(gameBoard, players) {
     for (let [comboA, comboB, comboC] of WINNING_COMBINATIONS) {
         const firstTile = gameBoard[comboA.row][comboA.column];
         const secondTile = gameBoard[comboB.row][comboB.column];
@@ -47,10 +33,35 @@ function App() {
         if (firstTile
             && firstTile === secondTile
             && firstTile === thirdTile) {
-            winner = players[firstTile];
+            return players[firstTile];
         }
     }
 
+    return null;
+}
+
+function getBoardFromTurns(turns) {
+    const board = [...INIT_GAME_BOARD.map(row => [...row])];
+
+    for (const {tile, player} of turns) {
+        const {
+            row,
+            col
+        } = tile;
+
+        board[row][col] = player;
+    }
+
+    return board;
+}
+
+function App() {
+    const [players, setPlayers] = useState(INIT_PLAYERS);
+    const [gameTurns, setGameTurns] = useState([]);
+    const activePlayer = getActivePlayer(gameTurns);
+
+    const gameBoard = getBoardFromTurns(gameTurns);
+    const winner = getWinnerFromBoard(gameBoard, players);
     const isGameDraw = gameTurns.length === 9 && winner === null;
 
     function handleSelectTile(rowIndex, columnIndex) {
@@ -79,8 +90,8 @@ function App() {
     return (<main>
             <div id="game-container">
                 <ol id="players" className="highlight-player">
-                    <PlayerInfo onNameChanged={handlePlayerNameChange} isActive={activePlayer === 'X'} name="Player 1" symbol="X"/>
-                    <PlayerInfo onNameChanged={handlePlayerNameChange} isActive={activePlayer === 'O'} name="Player 2" symbol="O"/>
+                    <PlayerInfo onNameChanged={handlePlayerNameChange} isActive={activePlayer === 'X'} name={INIT_PLAYERS.X} symbol="X"/>
+                    <PlayerInfo onNameChanged={handlePlayerNameChange} isActive={activePlayer === 'O'} name={INIT_PLAYERS.O} symbol="O"/>
                 </ol>
                 {(winner || isGameDraw) && <GameOver onClickRematch={handleSelectRematch} name={winner}/>}
                 <GameBoard gameBoard={gameBoard} turns={gameTurns} onSelectTile={handleSelectTile}/>
